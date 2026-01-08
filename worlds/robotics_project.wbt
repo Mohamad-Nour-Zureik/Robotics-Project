@@ -1,16 +1,320 @@
 #VRML_SIM R2025a utf8
+
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/kuka/youbot/protos/Youbot.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/kuka/youbot/protos/KukaBox.proto"
+
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.5773 0.5773 0.5773 2.0944
-  position 0 0 10
+  orientation 0.30299306972657863 -0.3027141625716325 -0.9036367276047493 4.610308569132355
+  position 0.04166256543153719 -6.621022573608732 4.551482860355355
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
+  floorSize 6.2 1.5
+  floorAppearance NULL
+}
+Pose {
+  translation 0 0 0.0001
+  children [
+    Group {
+      children [
+        Pose {
+          translation -1 0 0
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.04 1.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation -0.75 0 0
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.04 1.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation -0.5 0 0
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 1
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.04 1.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation -0.25 0 0
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.04 1.5
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+Youbot {
+  translation -2.7 0.5 0.1
+  rotation 0.0020129299457621623 4.4701898795519765e-05 0.9999979730553327 -3.137915307179586
+  name "taker"
+  controller "<none>"
+}
+Youbot {
+  translation 2.7 -0.5 0.1
+  rotation -0.025624670267534965 0.9995758051916911 0.013841457620576396 0.0031885032885147807
+  name "correcter"
+  controller "<none>"
+}
+Pose {
+  translation -2.3 0.5 0.0001
+  children [
+    Group {
+      children [
+        Pose {
+          translation 0 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.6 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.15 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.75 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.3 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 0.733333
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.9 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 0.733333
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.45 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 1.05 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.5
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+KukaBox {
+  translation -1 0.1 0.015
+  color 1 0 0
+}
+KukaBox {
+  translation -0.75 0.1 0.015
+  name "Kuka box(1)"
+  color 0 1 0
+}
+KukaBox {
+  translation -0.5 0.1 0.015
+  name "Kuka box(2)"
+  color 0 0 1
+}
+KukaBox {
+  translation -0.25 0.1 0.015
+  name "Kuka box(3)"
+  color 1 1 0
+}
+Pose {
+  translation 0.4 -0.55 0.0001
+  children [
+    Group {
+      children [
+        Pose {
+          translation 0 0.2 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.45 0.8
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.45 0.2 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.45 0.8
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.9 0.2 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 1
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.45 0.8
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 1.35 0.2 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.45 0.8
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
