@@ -9,19 +9,19 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.3718501361617971 0.010775273908569208 0.9282302352911417 3.0878177093712362
-  position 9.666358244109805 -0.7950974170644539 9.238089256716725
+  orientation 0.0006748052142064788 0.9999966191134921 -0.0025112545685624763 0.5208008347773193
+  position -4.415453510135501 -0.0550178221604233 1.9506035455923594
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
-  floorSize 6.2 1.5
+  floorSize 5 1.2
   floorAppearance NULL
 }
 Pose {
-  translation 0 0 0.0001
+  translation 0.5 0 0.0001
   children [
     Group {
       children [
@@ -35,7 +35,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.04 1.5
+                size 0.04 1.2
               }
             }
           ]
@@ -50,7 +50,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.04 1.5
+                size 0.04 1.2
               }
             }
           ]
@@ -65,7 +65,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.04 1.5
+                size 0.04 1.2
               }
             }
           ]
@@ -80,7 +80,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.04 1.5
+                size 0.04 1.2
               }
             }
           ]
@@ -90,63 +90,25 @@ Pose {
   ]
 }
 Youbot {
-  hidden translation_2 0 0 0.077
-  hidden rotation_2 0 0 -1 4.7404432489845705e-06
-  hidden translation_3 0.033 0 0.07
-  hidden rotation_3 0 -1 0 0
-  hidden translation_4 0 0 0.155
-  hidden rotation_4 0 -1 0 0
-  hidden translation_5 0 0 0.135
-  hidden rotation_5 0 -1 0 0
-  hidden translation_6 0 0 0.081
-  hidden rotation_6 0 0 1 0
-  hidden translation_7 0 4.872765361970764e-11 0.09
-  hidden rotation_7 1 0 0 4.71239
-  hidden translation_8 0 2.4509707967622374e-11 0.09
-  hidden rotation_8 0 -0.7071067811865476 0.7071067811865476 3.14159
-  hidden translation_9 0.228 -0.158 -0.055
-  hidden rotation_9 0 1 0 0
-  hidden translation_10 0.228 0.158 -0.055
-  hidden rotation_10 0 1 0 0
-  hidden translation_11 -0.228 -0.158 -0.055
-  hidden rotation_11 0 1 0 0
-  hidden translation_12 -0.228 0.158 -0.055
-  hidden rotation_12 0 1 0 0
-  translation -2.700867612076381 0.49997959035424727 0.09887518202924367
-  rotation -0.002118735000213926 -4.489122672279949e-05 0.9999977544708671 -3.1379153044199835
+  translation -2.15 0.35 0.1
+  rotation -0.01639450551902882 0.7382442485217551 0.6743342270071536 0.00545329
   name "taker"
-  controller "<none>"
+  controller "taker"
+  bodySlot [
+    Camera {
+      translation 0.3 0.2 0
+      rotation 1 0 0 -1.57
+    }
+  ]
 }
 Youbot {
-  hidden translation_2 0 0 0.077
-  hidden rotation_2 0 0 -1 7.104338595388904e-06
-  hidden translation_3 0.033 0 0.07
-  hidden rotation_3 0 -0.9999999999999999 0 1.5196262340524156e-07
-  hidden translation_4 0 0 0.155
-  hidden rotation_4 0 -1 0 1.0075653496013371e-06
-  hidden translation_5 0 0 0.135
-  hidden rotation_5 0 1 0 2.9802322387695313e-08
-  hidden translation_6 0 0 0.081
-  hidden rotation_6 0 0 1 0
-  hidden translation_7 0 1.2126795353384873e-10 0.09
-  hidden rotation_7 1 0 0 4.71239
-  hidden translation_8 0 -5.593659547555598e-10 0.09
-  hidden rotation_8 0 -0.7071067811865476 0.7071067811865476 3.14159
-  hidden translation_9 0.228 -0.158 -0.055
-  hidden rotation_9 0 -1 0 2.043144285798385e-07
-  hidden translation_10 0.228 0.158 -0.055
-  hidden rotation_10 0 1 0 8.102889195810478e-06
-  hidden translation_11 -0.228 -0.158 -0.055
-  hidden rotation_11 0 -1 0 1.004475328108841e-06
-  hidden translation_12 -0.228 0.158 -0.055
-  hidden rotation_12 0 -1 0 6.713134365974412e-06
-  translation 2.699999990393073 -0.35000000024959094 0.09887518226828979
+  translation 2.15 -0.39 0.0988752
   rotation -0.01945904658927962 0.9947610776645968 0.10035807824687741 0.004259923004606992
   name "correcter"
-  controller "<none>"
+  controller "correcter"
 }
 Pose {
-  translation -2.3 0.5 0.0001
+  translation -1.7 0.35 0.0001
   children [
     Group {
       children [
@@ -160,13 +122,58 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.05 0.1
+                size 0.12 0.5
               }
             }
           ]
         }
         Pose {
-          translation 0.2 0 0.0001
+          translation 0.12 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.12 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.24 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 1
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.12 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.36 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.12 0.5
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.48 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -175,13 +182,13 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.05 0.1
+                size 0.12 0.5
               }
             }
           ]
         }
         Pose {
-          translation 0.05 0 0.0001
+          translation 0.6 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -190,58 +197,28 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.05 0.1
+                size 0.12 0.5
               }
             }
           ]
         }
         Pose {
-          translation 0.25 0 0.0001
+          translation 0.72 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 1 0
+                baseColor 0 0 1
                 roughness 1
                 metalness 0
               }
               geometry Plane {
-                size 0.05 0.1
+                size 0.12 0.5
               }
             }
           ]
         }
         Pose {
-          translation 0.1 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0 0 0.733333
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.05 0.1
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.3 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0 0 0.733333
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.05 0.1
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.15 0 0.0001
+          translation 0.84 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -250,22 +227,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.05 0.1
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.35 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 1 1 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.05 0.1
+                size 0.12 0.5
               }
             }
           ]
@@ -275,30 +237,30 @@ Pose {
   ]
 }
 KukaBox {
-  translation -1 0.1 0.012483444616856501
+  translation -0.5 0 0.0124834
   rotation 0.2864758252537829 0.5729516505075738 -0.7678919245087886 2.6456412187870065e-16
   color 1 0 0
 }
 KukaBox {
-  translation -0.75 0.1 0.012483444616856501
+  translation -0.25 0 0.0124834
   rotation 0.2864758252537829 0.5729516505075738 -0.7678919245087886 2.6456412187870065e-16
   name "Kuka box(1)"
   color 0 1 0
 }
 KukaBox {
-  translation -0.5 0.1 0.012483444616856503
+  translation 0 0 0.0124834
   rotation -0.3842751205905096 -0.19213756029525714 -0.9030037594710976 3.9446334715231187e-16
   name "Kuka box(2)"
   color 0 0 1
 }
 KukaBox {
-  translation -0.25 0.1 0.012483444616856503
+  translation 0.25 0 0.0124834
   rotation -0.1934881108259921 -0.9674405541298909 0.1631598148866262 1.3056999527292304e-16
   name "Kuka box(3)"
   color 1 1 0
 }
 Pose {
-  translation 0.4 -0.55 0.0001
+  translation 0.7 -0.53 0.0001
   children [
     Group {
       children [
@@ -312,13 +274,13 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.8
+                size 0.15 0.55
               }
             }
           ]
         }
         Pose {
-          translation 0.45 0.2 0.0001
+          translation 0.3 0.2 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -327,7 +289,22 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.8
+                size 0.15 0.55
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.6 0.2 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 1
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.15 0.55
               }
             }
           ]
@@ -337,27 +314,12 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 0 1
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.15 0.8
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 1.35 0.2 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
                 baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.8
+                size 0.15 0.55
               }
             }
           ]
