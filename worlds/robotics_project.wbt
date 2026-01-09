@@ -9,8 +9,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.30299306972657863 -0.3027141625716325 -0.9036367276047493 4.610308569132355
-  position 0.04166256543153719 -6.621022573608732 4.551482860355355
+  orientation -0.3718501361617971 0.010775273908569208 0.9282302352911417 3.0878177093712362
+  position 9.666358244109805 -0.7950974170644539 9.238089256716725
 }
 TexturedBackground {
 }
@@ -90,14 +90,58 @@ Pose {
   ]
 }
 Youbot {
-  translation -2.7 0.5 0.1
-  rotation 0.0020129299457621623 4.4701898795519765e-05 0.9999979730553327 -3.137915307179586
+  hidden translation_2 0 0 0.077
+  hidden rotation_2 0 0 -1 4.7404432489845705e-06
+  hidden translation_3 0.033 0 0.07
+  hidden rotation_3 0 -1 0 0
+  hidden translation_4 0 0 0.155
+  hidden rotation_4 0 -1 0 0
+  hidden translation_5 0 0 0.135
+  hidden rotation_5 0 -1 0 0
+  hidden translation_6 0 0 0.081
+  hidden rotation_6 0 0 1 0
+  hidden translation_7 0 4.872765361970764e-11 0.09
+  hidden rotation_7 1 0 0 4.71239
+  hidden translation_8 0 2.4509707967622374e-11 0.09
+  hidden rotation_8 0 -0.7071067811865476 0.7071067811865476 3.14159
+  hidden translation_9 0.228 -0.158 -0.055
+  hidden rotation_9 0 1 0 0
+  hidden translation_10 0.228 0.158 -0.055
+  hidden rotation_10 0 1 0 0
+  hidden translation_11 -0.228 -0.158 -0.055
+  hidden rotation_11 0 1 0 0
+  hidden translation_12 -0.228 0.158 -0.055
+  hidden rotation_12 0 1 0 0
+  translation -2.700867612076381 0.49997959035424727 0.09887518202924367
+  rotation -0.002118735000213926 -4.489122672279949e-05 0.9999977544708671 -3.1379153044199835
   name "taker"
   controller "<none>"
 }
 Youbot {
-  translation 2.7 -0.5 0.1
-  rotation -0.025624670267534965 0.9995758051916911 0.013841457620576396 0.0031885032885147807
+  hidden translation_2 0 0 0.077
+  hidden rotation_2 0 0 -1 7.104338595388904e-06
+  hidden translation_3 0.033 0 0.07
+  hidden rotation_3 0 -0.9999999999999999 0 1.5196262340524156e-07
+  hidden translation_4 0 0 0.155
+  hidden rotation_4 0 -1 0 1.0075653496013371e-06
+  hidden translation_5 0 0 0.135
+  hidden rotation_5 0 1 0 2.9802322387695313e-08
+  hidden translation_6 0 0 0.081
+  hidden rotation_6 0 0 1 0
+  hidden translation_7 0 1.2126795353384873e-10 0.09
+  hidden rotation_7 1 0 0 4.71239
+  hidden translation_8 0 -5.593659547555598e-10 0.09
+  hidden rotation_8 0 -0.7071067811865476 0.7071067811865476 3.14159
+  hidden translation_9 0.228 -0.158 -0.055
+  hidden rotation_9 0 -1 0 2.043144285798385e-07
+  hidden translation_10 0.228 0.158 -0.055
+  hidden rotation_10 0 1 0 8.102889195810478e-06
+  hidden translation_11 -0.228 -0.158 -0.055
+  hidden rotation_11 0 -1 0 1.004475328108841e-06
+  hidden translation_12 -0.228 0.158 -0.055
+  hidden rotation_12 0 -1 0 6.713134365974412e-06
+  translation 2.699999990393073 -0.35000000024959094 0.09887518226828979
+  rotation -0.01945904658927962 0.9947610776645968 0.10035807824687741 0.004259923004606992
   name "correcter"
   controller "<none>"
 }
@@ -116,13 +160,13 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.5
+                size 0.05 0.1
               }
             }
           ]
         }
         Pose {
-          translation 0.6 0 0.0001
+          translation 0.2 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -131,13 +175,13 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.5
+                size 0.05 0.1
               }
             }
           ]
         }
         Pose {
-          translation 0.15 0 0.0001
+          translation 0.05 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -146,13 +190,13 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.5
+                size 0.05 0.1
               }
             }
           ]
         }
         Pose {
-          translation 0.75 0 0.0001
+          translation 0.25 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -161,7 +205,22 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.5
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.1 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 0.733333
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
               }
             }
           ]
@@ -176,28 +235,13 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.5
+                size 0.05 0.1
               }
             }
           ]
         }
         Pose {
-          translation 0.9 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0 0 0.733333
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.15 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.45 0 0.0001
+          translation 0.15 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -206,13 +250,13 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.5
+                size 0.05 0.1
               }
             }
           ]
         }
         Pose {
-          translation 1.05 0 0.0001
+          translation 0.35 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -221,7 +265,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.15 0.5
+                size 0.05 0.1
               }
             }
           ]
@@ -231,21 +275,25 @@ Pose {
   ]
 }
 KukaBox {
-  translation -1 0.1 0.015
+  translation -1 0.1 0.012483444616856501
+  rotation 0.2864758252537829 0.5729516505075738 -0.7678919245087886 2.6456412187870065e-16
   color 1 0 0
 }
 KukaBox {
-  translation -0.75 0.1 0.015
+  translation -0.75 0.1 0.012483444616856501
+  rotation 0.2864758252537829 0.5729516505075738 -0.7678919245087886 2.6456412187870065e-16
   name "Kuka box(1)"
   color 0 1 0
 }
 KukaBox {
-  translation -0.5 0.1 0.015
+  translation -0.5 0.1 0.012483444616856503
+  rotation -0.3842751205905096 -0.19213756029525714 -0.9030037594710976 3.9446334715231187e-16
   name "Kuka box(2)"
   color 0 0 1
 }
 KukaBox {
-  translation -0.25 0.1 0.015
+  translation -0.25 0.1 0.012483444616856503
+  rotation -0.1934881108259921 -0.9674405541298909 0.1631598148866262 1.3056999527292304e-16
   name "Kuka box(3)"
   color 1 1 0
 }
@@ -264,7 +312,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.45 0.8
+                size 0.15 0.8
               }
             }
           ]
@@ -279,7 +327,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.45 0.8
+                size 0.15 0.8
               }
             }
           ]
@@ -294,7 +342,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.45 0.8
+                size 0.15 0.8
               }
             }
           ]
@@ -309,7 +357,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.45 0.8
+                size 0.15 0.8
               }
             }
           ]
