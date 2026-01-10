@@ -7,10 +7,42 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/kuka/youbot/protos/KukaBox.proto"
 
 WorldInfo {
+  info [
+    "Simulation of the KUKA youBot robot."
+    "This model includes an accurate and fast simulation of the Meccanum wheels."
+    "The robot can be equiped with various sensors (including the Microsoft Kinect) and configured with zero, one or two arms."
+  ]
+  title "KUKA youBot"
+  basicTimeStep 16
+  FPS 165
+  contactProperties [
+    ContactProperties {
+      material1 "InteriorWheelMat"
+      coulombFriction [
+        0, 2, 0
+      ]
+      frictionRotation -0.785398 0
+      bounce 0
+      forceDependentSlip [
+        10, 0
+      ]
+    }
+    ContactProperties {
+      material1 "ExteriorWheelMat"
+      coulombFriction [
+        0, 2, 0
+      ]
+      frictionRotation 0.785398 0
+      bounce 0
+      forceDependentSlip [
+        10, 0
+      ]
+    }
+  ]
 }
 Viewpoint {
-  orientation 0.0006748052142064788 0.9999966191134921 -0.0025112545685624763 0.5208008347773193
-  position -4.415453510135501 -0.0550178221604233 1.9506035455923594
+  orientation -0.28709357113085676 0.2909649790434092 0.9126426805632093 1.648743280012944
+  position 0.45947630950134455 -6.43182218439263 4.614882043570665
 }
 TexturedBackground {
 }
@@ -90,25 +122,13 @@ Pose {
   ]
 }
 Youbot {
-  translation -2.15 0.35 0.1
-  rotation -0.01639450551902882 0.7382442485217551 0.6743342270071536 0.00545329
-  name "taker"
-  controller "taker"
-  bodySlot [
-    Camera {
-      translation 0.3 0.2 0
-      rotation 1 0 0 -1.57
-    }
-  ]
-}
-Youbot {
-  translation 2.15 -0.39 0.0988752
-  rotation -0.01945904658927962 0.9947610776645968 0.10035807824687741 0.004259923004606992
+  translation 2.149776597924027 -0.39000447157174706 0.10193771736391533
+  rotation -0.01893315743599298 0.9799101196699082 0.19853889522713164 0.0021532096868765688
   name "correcter"
   controller "correcter"
 }
 Pose {
-  translation -1.7 0.35 0.0001
+  translation -1.653 0.35 0.0001
   children [
     Group {
       children [
@@ -117,7 +137,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 0 0
+                baseColor 0 1 0
                 roughness 1
                 metalness 0
               }
@@ -132,7 +152,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 1 0
+                baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
@@ -162,7 +182,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 1 0
+                baseColor 1 0 0
                 roughness 1
                 metalness 0
               }
@@ -177,7 +197,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 0 0
+                baseColor 0 0 1
                 roughness 1
                 metalness 0
               }
@@ -192,7 +212,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 1 0
+                baseColor 1 0 0
                 roughness 1
                 metalness 0
               }
@@ -207,7 +227,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 0 1
+                baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
@@ -222,7 +242,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 1 0
+                baseColor 0 1 0
                 roughness 1
                 metalness 0
               }
@@ -237,25 +257,25 @@ Pose {
   ]
 }
 KukaBox {
-  translation -0.5 0 0.0124834
-  rotation 0.2864758252537829 0.5729516505075738 -0.7678919245087886 2.6456412187870065e-16
+  translation -0.5 0.111 0.012491722812477677
+  rotation -0.026935663538757187 -0.10774265415502027 -0.9938138610954059 9.37929064920375e-16
   color 1 0 0
 }
 KukaBox {
-  translation -0.25 0 0.0124834
-  rotation 0.2864758252537829 0.5729516505075738 -0.7678919245087886 2.6456412187870065e-16
+  translation -0.25 0.111 0.012491722812477677
+  rotation 0.030283053174386516 -0.030283053174390867 -0.9990825158018101 8.342534542481322e-16
   name "Kuka box(1)"
   color 0 1 0
 }
 KukaBox {
-  translation 0 0 0.0124834
-  rotation -0.3842751205905096 -0.19213756029525714 -0.9030037594710976 3.9446334715231187e-16
+  translation 2.4648691148619644e-17 0.111 0.012491722812499998
+  rotation -0.552038781973807 -0.8280581729614446 0.09784091878467821 4.576443275514871e-17
   name "Kuka box(2)"
   color 0 0 1
 }
 KukaBox {
-  translation 0.25 0 0.0124834
-  rotation -0.1934881108259921 -0.9674405541298909 0.1631598148866262 1.3056999527292304e-16
+  translation 0.25 0.111 0.012491722812477677
+  rotation -0.4641969490792695 0.30946463271949615 0.8299113407836317 8.163692727631753e-17
   name "Kuka box(3)"
   color 1 1 0
 }
@@ -325,6 +345,21 @@ Pose {
           ]
         }
       ]
+    }
+  ]
+}
+Youbot {
+  translation -2.15 0.38066 0.101938
+  rotation -0.009684072804544142 0.45770592587256387 0.8890509007672482 0.004609661056327183
+  name "taker"
+  controller "taker"
+  bodySlot [
+    GPS {
+    }
+    Camera {
+      rotation 0 1 0 1.6
+      name "Camera"
+      fieldOfView 1e-05
     }
   ]
 }
