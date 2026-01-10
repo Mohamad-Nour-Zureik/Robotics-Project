@@ -42,7 +42,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.28709357113085676 0.2909649790434092 0.9126426805632093 1.648743280012944
-  position 0.45947630950134455 -6.43182218439263 4.614882043570665
+  position 0.23653302877437457 -5.696364425700574 4.082294362384687
 }
 TexturedBackground {
 }
@@ -126,6 +126,11 @@ Youbot {
   rotation -0.01893315743599298 0.9799101196699082 0.19853889522713164 0.0021532096868765688
   name "correcter"
   controller "correcter"
+  bodySlot [
+    Receiver {
+      channel 1
+    }
+  ]
 }
 Pose {
   translation -1.653 0.35 0.0001
@@ -354,6 +359,9 @@ Youbot {
   name "taker"
   controller "taker"
   bodySlot [
+    Emitter {
+      channel 1
+    }
     GPS {
     }
     Camera {
