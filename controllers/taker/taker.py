@@ -5,7 +5,7 @@ SCC = 0.25 # Space between 2 cubes
 SPP = 0.3   # Space between 2 bases
 SES = 0.45  # White Sapce
 COLORS = ["red", "green", "blue", "yellow"]
-SPEED = 5.0
+SPEED = 14.0
 
 CUBE_POSITIONS = {color: PATH_START + (i * SCC) for i, color in enumerate(COLORS)}
 
@@ -192,7 +192,7 @@ class TakerController(Robot):
                 color_stable_count = 0
                 current_stable_color = c
 
-            if color_stable_count > 3:  # Stable for ~100ms
+            if color_stable_count > 1:  # Stable for ~100ms
                 c_valid = current_stable_color
 
                 if c_valid in ["white", "black", "unknown", None]:
@@ -304,20 +304,33 @@ class TakerController(Robot):
 
         self.move_back_after_placing_the_cube(steps=steps, speed=speed)
 
+    def move_to_with_speed(self,dir,speed):
+        # Determine direction
+        if dir:
+            self.move_forward(speed)
+        else:
+            self.move_backward(speed)
+        
+
     # Done
     def go_to_x(self, target_x):
         current_pos = self.get_position()
         current_x = current_pos[0]
+        init_x = current_x
 
-        # Determine direction
-        if target_x > current_x:
-            self.move_forward(SPEED)
-        else:
-            self.move_backward(SPEED)
+        dir = target_x > current_x
 
         # Loop until the robot reaches the target coordinate
         while self.step(self.timestep) != -1:
             current_x = self.get_position()[0]
+
+            speed = SPEED * min(
+                1,
+                0.06 + (abs(current_x - init_x) * 7) ** 2, # for the taking off 
+                0.06 + (abs(current_x - target_x) * 7)** 2 # for the slowing down
+            )
+            
+            self.move_to_with_speed(dir,speed)
 
             # Check if we have reached or passed the target
             # We use a small threshold (0.01) to prevent jitter
