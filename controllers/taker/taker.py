@@ -5,7 +5,7 @@ SCC = 0.25 # Space between 2 cubes
 SPP = 0.3   # Space between 2 bases
 SES = 0.45  # White Sapce
 COLORS = ["red", "green", "blue", "yellow"]
-SPEED = 4.0
+SPEED = 5.0
 
 CUBE_POSITIONS = {color: PATH_START + (i * SCC) for i, color in enumerate(COLORS)}
 
@@ -119,8 +119,9 @@ class TakerController(Robot):
         self.set_wheels(0, 0, 0, 0)
 
     # Done
-    def set_arm_pos(self, pos_list):
+    def set_arm_pos(self, pos_list,vel=1.2):
         for i, pos in enumerate(pos_list):
+            self.arm_motors[i].setVelocity(vel)
             self.arm_motors[i].setPosition(pos)
 
     # Done
@@ -222,27 +223,27 @@ class TakerController(Robot):
         for _ in range(50):
             self.step(self.timestep)
 
-        self.set_arm_pos([-1.60, -4, -1.2, -0.82, 0])
+        self.set_arm_pos([-1.60, -1.134, -1.2, -0.82, 0],.9)
         for _ in range(100):
             self.step(self.timestep)
 
         self.set_gripper(False)
-        for _ in range(40):
+        for _ in range(30):
             self.step(self.timestep)
 
-        self.set_arm_pos([0, 0, 0, 0, 0])
-        for _ in range(50):
-            self.step(self.timestep)
+        self.set_arm_pos([-1.6, 0, 0, 0, 0],0.5)
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
-        for _ in range(60):
-            self.step(self.timestep)
+        # self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_gripper(True)
-        for _ in range(40):
-            self.step(self.timestep)
+        # self.set_gripper(True)
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.arm_stow()
+        # self.arm_stow()
         print("Cube placed on robot carrier.")
 
     # Done
@@ -272,30 +273,30 @@ class TakerController(Robot):
 
         self.move_right_to_place_cube(steps=steps, speed=speed)
 
-        self.set_gripper(True)
+        # self.set_gripper(True)
 
-        self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
-        for _ in range(60):
-            self.step(self.timestep)
+        # self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_gripper(False)
-        for _ in range(40):
-            self.step(self.timestep)
+        # self.set_gripper(False)
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([0, 0, 0, 0, 0])
-        for _ in range(50):
-            self.step(self.timestep)
+        # self.set_arm_pos([0, 0, 0, 0, 0])
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([-1.60, 0, 0, 0, 0])
-        for _ in range(50):
-            self.step(self.timestep)
+        # self.set_arm_pos([-1.60, 0, 0, 0, 0])
+        # for _ in range(20):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([-1.60, -4, -1.2, -0.82, 0])
+        self.set_arm_pos([-1.60, -1.134, -1.2, -0.82, 0],.8)
         for _ in range(100):
             self.step(self.timestep)
 
         self.set_gripper(True)
-        for _ in range(40):
+        for _ in range(20):
             self.step(self.timestep)
 
         self.arm_stow()
