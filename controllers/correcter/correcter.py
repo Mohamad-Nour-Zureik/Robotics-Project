@@ -26,38 +26,42 @@ BASE_POSITIONS = {
 class CorrecterController(ParentController):
 
     def __init__(self):
-        super(CorrecterController, self).__init__()
+        super().__init__()
         
-        # Receiver Initialization ------------------------------
-        self.receiver = self.getDevice("receiver")
-        self.receiver.enable(self.timestep)
-        self.receiver.setChannel(1)
-
     def pick_cube(self):
         print("Picking cube from wrong Base...")
         self.stop()
 
         self.set_gripper(True)
 
-        self.set_arm_pos([1.60, 0, 0, 0, 0])
-        for _ in range(50):
-            self.step(self.timestep)
-
-        self.set_arm_pos([1.60, -1.134, -1.1, -0.82, 0],.9)
-        for _ in range(100):
-            self.step(self.timestep)
+        self.set_arm_pos([-1.55,.7,.4,0.37,1.55],.5)
+        self.wait(300)
 
         self.set_gripper(False)
-        for _ in range(30):
-            self.step(self.timestep)
+        self.wait(40)
 
-        self.set_arm_pos([1.60, -1.134, -1.4, -0.82, 0],.9)
-        for _ in range(30):
-            self.step(self.timestep)
+        # Got it, Thx
+        self.send_message(self.EVENT_MESSAGE)
 
-        self.set_arm_pos([1.6, 0, 0, 0, 0],0.5)
-        for _ in range(280):
-            self.step(self.timestep)
+        #self.set_arm_pos([1.60, 0, 0, 0, 0])
+        #self.wait(50)
+
+        #self.set_arm_pos([1.60, -1.134, -1.1, -0.82, 0],.9)
+        #self.wait(100)
+
+        #self.set_gripper(False)
+
+        #for _ in range(30):
+            #self.step(self.timestep)
+
+        #self.set_arm_pos([1.60, -1.134, -1.4, -0.82, 0],.9)
+        #for _ in range(30):
+            #self.step(self.timestep)
+
+        #self.set_arm_pos([1.6, 0, 0, 0, 0],0.5)
+        #for _ in range(280):
+            #self.step(self.timestep)
+
 
         # self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
         # for _ in range(280):
@@ -74,7 +78,18 @@ class CorrecterController(ParentController):
         print("Placing cube...")
         self.stop()
 
+        self.set_arm_pos([1.55, -1.134, -0.95, -0.89, 0],.8)
+        self.wait(250)
+
+        self.set_gripper(True)
+        self.wait(20)
+
+        # self.set_arm_pos([1.5, -1.134, -0.95, -0.89, 0],.8)
+        # self.wait(140)
+
         # self.set_gripper(True)
+        # self.wait(20)
+        
 
         # self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
         # for _ in range(280):
@@ -92,37 +107,45 @@ class CorrecterController(ParentController):
         # for _ in range(20):
         #     self.step(self.timestep)
 
-        self.set_arm_pos([1.5, -1.134, -0.9, -0.82, 0],.8)
-        for _ in range(100):
-            self.step(self.timestep)
-
-        self.set_gripper(True)
-        for _ in range(20):
-            self.step(self.timestep)
-
         self.arm_stow()
         print("Cube placed on its base.")    
 
     def run(self):
 
+        # Hay there, I'm ready
+        self.send_message(self.EVENT_MESSAGE)
+
         while self.step(self.timestep) != -1:
-            if self.receiver.getQueueLength() > 0:
-                message = self.receiver.getString() # .decode("utf-8")
-                self.receiver.nextPacket() 
 
-                print(f"Received Tasks Need Correct : {message}")
+            # Got the task, and going to my dist
+            message = self.handle_info_message()
 
-                wrong_cube, wrong_base = message.split(",")
+            print(f"Received Tasks Need Correct : {message}")
 
-                print(f"Correcter needs to fix: Cube {wrong_cube} on Base {wrong_base}")
+            wrong_cube, wrong_base = message.split(",")
 
-                self.go_to_x(BASE_POSITIONS[wrong_base])
-                self.pick_cube()
-                self.go_to_x(BASE_POSITIONS[wrong_cube])
-                self.place_cube()
+            print(f"Correcter needs to fix: Cube {wrong_cube} on Base {wrong_base}")
 
-                self.stop()
+            self.go_to_x(BASE_POSITIONS[wrong_base])
+
+            # Arrived, I'm waiting
+            self.send_message(self.EVENT_MESSAGE)
+
+            # I'll get it
+            self.handle_event_message()
+
+            self.pick_cube()
+
+            self.go_to_x(BASE_POSITIONS[wrong_cube])
+            self.place_cube()
+
+            # Ready again
+            self.send_message(self.EVENT_MESSAGE)
+            self.stop()
 
 
 correcter = CorrecterController()
+# correcter.pick_cube()
+# correcter.go_to_x(BASE_POSITIONS['green'])
+
 correcter.run()

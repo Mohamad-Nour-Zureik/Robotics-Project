@@ -6,7 +6,23 @@ SPEED = 2.0
 class ParentController(Robot):
     def __init__(self):
         super(ParentController, self).__init__()
+
+        self.EVENT_MESSAGE = "EVNT"
+        self.INFO_MESSAGE = "INFO"
+
         self.timestep = int(self.getBasicTimeStep())
+
+        # Receiver Initialization ------------------------------
+        self.receiver = self.getDevice("receiver")
+        self.receiver.enable(self.timestep)
+        self.receiver.setChannel(1)
+
+        # Emitter Initialization (Sender) ---
+        self.emitter = self.getDevice("emitter")
+        # Ensure we are broadcasting on a specific channel (e.g., 1)
+        # The Correcter must have a Receiver set to the same channel.
+        if self.emitter:
+            self.emitter.setChannel(1)
 
         # GPS Initialization -----------------------------------
         self.gps = self.getDevice("gps")  # Ensure the name matches the .wbt file
@@ -57,6 +73,42 @@ class ParentController(Robot):
             return self.gps.getValues()
         return [0, 0, 0]
 
+    def handle_event_message(self):
+
+        print(f"{self.name} is waiting...")
+
+        while self.step(self.timestep) != -1:
+            if self.receiver.getQueueLength() > 0:
+
+                message = self.receiver.getString() # .decode("utf-8")
+                self.receiver.nextPacket() 
+
+                assert(
+                    message.startswith(self.EVENT_MESSAGE)
+                )
+
+                return True
+
+    def handle_info_message(self):
+
+        print(f"{self.name} is waiting...")
+        
+        while self.step(self.timestep) != -1:
+            if self.receiver.getQueueLength() > 0:
+
+                message = self.receiver.getString()
+                self.receiver.nextPacket() 
+
+                assert(message.startswith(self.INFO_MESSAGE))
+
+                return message[len(self.INFO_MESSAGE)+1:]
+    
+    def send_message(self,message):
+        print(f"From {self.name}, Sending message {message}")
+
+        if self.emitter:
+            self.emitter.send(message.encode("utf-8"))
+
     # Done
     def set_wheels(self, v_fl, v_fr, v_bl, v_br):
         self.wheels[0].setVelocity(v_fl)
@@ -103,13 +155,20 @@ class ParentController(Robot):
         self.set_gripper(True)    
 
     # Done
+    def wait(self, rng):
+        for _ in range(rng):
+            self.step(self.timestep)
+        
 
     def go_to_x(self, target_x):
         current_pos = self.get_position()
         current_x = current_pos[0]
 
+        if abs(target_x - current_x) <= 0.01:
+            return
+
         # Determine direction
-        if target_x > current_x:
+        if target_x - current_x > 0.01:
             self.move_forward(SPEED)
         else:
             self.move_backward(SPEED)
@@ -120,7 +179,7 @@ class ParentController(Robot):
 
             # Check if we have reached or passed the target
             # We use a small threshold (0.01) to prevent jitter
-            if abs(current_x - target_x) < 0.01:
+            if abs(current_x - target_x) <= 0.001:
                 break
 
         self.stop()
