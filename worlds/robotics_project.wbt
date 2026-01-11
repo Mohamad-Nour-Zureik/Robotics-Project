@@ -42,7 +42,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.5851428335134617 -0.5844231412279991 0.5621898757404257 4.164854058377113
-  position 1.5701479364145492 -0.2285182009986737 3.1501851150764795
+  position 1.5698189290218314 -0.4818674371383749 9.480095046551092
 }
 TexturedBackground {
 }
@@ -144,7 +144,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 1 0
+                baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
@@ -159,7 +159,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 1 0
+                baseColor 1 0 0
                 roughness 1
                 metalness 0
               }
@@ -174,7 +174,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 0 1
+                baseColor 0 1 0
                 roughness 1
                 metalness 0
               }
@@ -189,7 +189,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 0 0
+                baseColor 0 0 1
                 roughness 1
                 metalness 0
               }
@@ -204,7 +204,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 0 1
+                baseColor 1 0 0
                 roughness 1
                 metalness 0
               }
@@ -219,7 +219,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 0 0
+                baseColor 0 1 0
                 roughness 1
                 metalness 0
               }
@@ -234,7 +234,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 1 0
+                baseColor 0 0 1
                 roughness 1
                 metalness 0
               }
@@ -249,7 +249,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 1 0
+                baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
