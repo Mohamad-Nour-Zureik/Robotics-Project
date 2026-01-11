@@ -1,7 +1,7 @@
 from controller import Robot
 
 
-SPEED = 5.0
+SPEED = 2.0
 
 class ParentController(Robot):
     def __init__(self):

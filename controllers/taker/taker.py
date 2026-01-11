@@ -13,7 +13,7 @@ SCC = 0.25 # Space between 2 cubes
 SPP = 0.3   # Space between 2 bases
 SES = 0.45  # White Sapce
 COLORS = ["red", "green", "blue", "yellow"]
-SPEED = 5.0
+SPEED = 2.0
 
 CUBE_POSITIONS = {color: PATH_START + (i * SCC) for i, color in enumerate(COLORS)}
 
