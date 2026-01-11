@@ -144,7 +144,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 1 0
+                baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
@@ -159,7 +159,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 1 0
+                baseColor 1 0 0
                 roughness 1
                 metalness 0
               }
@@ -189,7 +189,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 0 0
+                baseColor 0 1 0
                 roughness 1
                 metalness 0
               }
@@ -204,7 +204,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 0 1
+                baseColor 1 0 0
                 roughness 1
                 metalness 0
               }
@@ -219,7 +219,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 0 0
+                baseColor 0 1 0
                 roughness 1
                 metalness 0
               }
@@ -234,7 +234,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 1 0
+                baseColor 0 0 1
                 roughness 1
                 metalness 0
               }
@@ -249,7 +249,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 1 0
+                baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
