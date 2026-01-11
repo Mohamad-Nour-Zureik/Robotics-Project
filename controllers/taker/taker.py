@@ -1,11 +1,11 @@
 from controller import Robot
 
 PATH_START = -0.65
-SCC = 0.25 
-SPP = 0.3   
-SES = 0.45  
+SCC = 0.25 # Space between 2 cubes
+SPP = 0.3   # Space between 2 bases
+SES = 0.45  # White Sapce
 COLORS = ["red", "green", "blue", "yellow"]
-SPEED = 4.0
+SPEED = 5.0
 
 CUBE_POSITIONS = {color: PATH_START + (i * SCC) for i, color in enumerate(COLORS)}
 
@@ -32,6 +32,13 @@ class TakerController(Robot):
             self.camera.enable(self.timestep)
         else:
             print("Error: Camera not found")
+
+        # --- NEW: Emitter Initialization (Sender) ---
+        self.emitter = self.getDevice("emitter")
+        # Ensure we are broadcasting on a specific channel (e.g., 1)
+        # The Correcter must have a Receiver set to the same channel.
+        if self.emitter:
+            self.emitter.setChannel(1)
 
         # GPS Initialization
         self.gps = self.getDevice("gps")  # Ensure the name matches the .wbt file
@@ -76,9 +83,6 @@ class TakerController(Robot):
             gripper = self.getDevice(name)
             self.fingers.append(gripper)
 
-        # Constants
-        self.WHEEL_RADIUS = 0.05
-
     # Done
     def get_position(self):
         if self.gps:
@@ -103,6 +107,7 @@ class TakerController(Robot):
 
     # Done
     def move_left(self, speed):
+        # fl , fr , bl , br
         self.set_wheels(-speed, speed, speed, -speed)
 
     # Done
@@ -110,20 +115,13 @@ class TakerController(Robot):
         self.set_wheels(speed, -speed, -speed, speed)
 
     # Done
-    def turn_left(self, speed):
-        self.set_wheels(-speed, speed, -speed, speed)
-
-    # Done
-    def turn_right(self, speed):
-        self.set_wheels(speed, -speed, speed, -speed)
-
-    # Done
     def stop(self):
         self.set_wheels(0, 0, 0, 0)
 
     # Done
-    def set_arm_pos(self, pos_list):
+    def set_arm_pos(self, pos_list,vel=1.2):
         for i, pos in enumerate(pos_list):
+            self.arm_motors[i].setVelocity(vel)
             self.arm_motors[i].setPosition(pos)
 
     # Done
@@ -225,27 +223,27 @@ class TakerController(Robot):
         for _ in range(50):
             self.step(self.timestep)
 
-        self.set_arm_pos([-1.60, -4, -1.2, -0.82, 0])
+        self.set_arm_pos([-1.60, -1.134, -1.2, -0.82, 0],.9)
         for _ in range(100):
             self.step(self.timestep)
 
         self.set_gripper(False)
-        for _ in range(40):
+        for _ in range(30):
             self.step(self.timestep)
 
-        self.set_arm_pos([0, 0, 0, 0, 0])
-        for _ in range(50):
-            self.step(self.timestep)
+        self.set_arm_pos([-1.6, 0, 0, 0, 0],0.5)
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
-        for _ in range(60):
-            self.step(self.timestep)
+        # self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_gripper(True)
-        for _ in range(40):
-            self.step(self.timestep)
+        # self.set_gripper(True)
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.arm_stow()
+        # self.arm_stow()
         print("Cube placed on robot carrier.")
 
     # Done
@@ -275,30 +273,30 @@ class TakerController(Robot):
 
         self.move_right_to_place_cube(steps=steps, speed=speed)
 
-        self.set_gripper(True)
+        # self.set_gripper(True)
 
-        self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
-        for _ in range(60):
-            self.step(self.timestep)
+        # self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_gripper(False)
-        for _ in range(40):
-            self.step(self.timestep)
+        # self.set_gripper(False)
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([0, 0, 0, 0, 0])
-        for _ in range(50):
-            self.step(self.timestep)
+        # self.set_arm_pos([0, 0, 0, 0, 0])
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([-1.60, 0, 0, 0, 0])
-        for _ in range(50):
-            self.step(self.timestep)
+        # self.set_arm_pos([-1.60, 0, 0, 0, 0])
+        # for _ in range(20):
+        #     self.step(self.timestep)
 
-        self.set_arm_pos([-1.60, -4, -1.2, -0.82, 0])
+        self.set_arm_pos([-1.60, -1.134, -1.2, -0.82, 0],.8)
         for _ in range(100):
             self.step(self.timestep)
 
         self.set_gripper(True)
-        for _ in range(40):
+        for _ in range(20):
             self.step(self.timestep)
 
         self.arm_stow()
@@ -334,7 +332,7 @@ class TakerController(Robot):
         self.arm_stow()
 
         colors = self.read_matrix_sequence()
-        
+
         self.go_to_x(PATH_START)
 
         if len(colors) < 8:
@@ -362,7 +360,15 @@ class TakerController(Robot):
             self.go_to_x(base_x)
 
             self.place_cube()
-            
+
+            if target_cube_color != target_base_color:
+                message = f"{target_cube_color},{target_base_color}"
+
+                print(f"(!) Different detected. Sending data to Correcter: {message}")
+
+                if self.emitter:
+                    self.emitter.send(message.encode("utf-8"))
+
         print("All tasks completed successfully!")
 
 
