@@ -9,7 +9,6 @@ sys.path.append(controllers_dir)
 from parent import ParentController
 
 
-
 PATH_START = -0.65
 SCC = 0.25 # Space between 2 cubes
 SPP = 0.3   # Space between 2 bases
@@ -25,11 +24,15 @@ BASE_POSITIONS = {
 
 
 class CorrecterController(ParentController):
-    
+
     def __init__(self):
         super(CorrecterController, self).__init__()
         
-              
+        # Receiver Initialization ------------------------------
+        self.receiver = self.getDevice("receiver")
+        self.receiver.enable(self.timestep)
+        self.receiver.setChannel(1)
+
     def pick_cube(self):
         print("Picking cube from wrong Base...")
         self.stop()
@@ -47,7 +50,7 @@ class CorrecterController(ParentController):
         self.set_gripper(False)
         for _ in range(30):
             self.step(self.timestep)
-        
+
         self.set_arm_pos([1.60, -1.134, -1.4, -0.82, 0],.9)
         for _ in range(30):
             self.step(self.timestep)
@@ -66,7 +69,6 @@ class CorrecterController(ParentController):
 
         # self.arm_stow()
         print("Cube placed on robot carrier.")
-
 
     def place_cube(self):
         print("Placing cube...")
@@ -90,7 +92,6 @@ class CorrecterController(ParentController):
         # for _ in range(20):
         #     self.step(self.timestep)
 
-   
         self.set_arm_pos([1.5, -1.134, -0.9, -0.82, 0],.8)
         for _ in range(100):
             self.step(self.timestep)
@@ -101,30 +102,26 @@ class CorrecterController(ParentController):
 
         self.arm_stow()
         print("Cube placed on its base.")    
-    
-    
-    
+
     def run(self):
-        
+
         while self.step(self.timestep) != -1:
             if self.receiver.getQueueLength() > 0:
                 message = self.receiver.getString() # .decode("utf-8")
                 self.receiver.nextPacket() 
-                
+
                 print(f"Received Tasks Need Correct : {message}")
 
                 wrong_cube, wrong_base = message.split(",")
 
                 print(f"Correcter needs to fix: Cube {wrong_cube} on Base {wrong_base}")
-                
+
                 self.go_to_x(BASE_POSITIONS[wrong_base])
                 self.pick_cube()
                 self.go_to_x(BASE_POSITIONS[wrong_cube])
                 self.place_cube()
 
                 self.stop()
-                
-
 
 
 correcter = CorrecterController()

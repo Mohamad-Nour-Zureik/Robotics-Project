@@ -1,9 +1,12 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import os
 import glob
+import re
+import shutil
+import random
 
-# Color name to RGB mapping
+# Color name to RGB mapping (Webots format)
 COLOR_MAP = {
     'r': '1 0 0',
     'g': '0 1 0',
@@ -11,231 +14,337 @@ COLOR_MAP = {
     'y': '1 1 0',
 }
 
-# Color display names and hex values for GUI
+# Color display properties for GUI
 COLOR_DISPLAY = {
-    'r': {'name': 'Red', 'hex': '#FF0000'},
-    'g': {'name': 'Green', 'hex': '#00FF00'},
-    'b': {'name': 'Blue', 'hex': '#0000FF'},
-    'y': {'name': 'Yellow', 'hex': '#FFFF00'},
+    'r': {'name': 'Red',    'hex': '#FF4444', 'fg': 'white'},
+    'g': {'name': 'Green',  'hex': '#66BB6A', 'fg': 'black'},
+    'b': {'name': 'Blue',   'hex': '#42A5F5', 'fg': 'white'},
+    'y': {'name': 'Yellow', 'hex': '#FFEB3B', 'fg': 'black'},
 }
 
 # Available colors cycle
 COLORS = ['r', 'g', 'b', 'y']
 
-def find_matching_brace(content, start_pos):
-    """Find the position of the matching closing brace."""
-    depth = 0
-    i = start_pos
-    while i < len(content):
-        if content[i] == '{':
-            depth += 1
-        elif content[i] == '}':
-            depth -= 1
-            if depth == 0:
-                return i
-        i += 1
-    return -1
+class WorldEditor:
+    def __init__(self, file_path):
+        self.file_path = file_path
+    
+    def find_matching_brace(self, content, start_pos):
+        """Find the position of the matching closing brace."""
+        depth = 0
+        i = start_pos
+        while i < len(content):
+            if content[i] == '{':
+                depth += 1
+            elif content[i] == '}':
+                depth -= 1
+                if depth == 0:
+                    return i
+            i += 1
+        return -1
 
-def update_world_file(input_file, output_file, color_array):
-    """
-    Updates the Webots world file with new base colors.
-    
-    Args:
-        input_file: Path to the input .wbt file
-        output_file: Path to the output .wbt file
-        color_array: List of color names to apply to the bases
-    """
-    
-    # Read the file
-    with open(input_file, 'r') as f:
-        content = f.read()
-    
-    # Find the start of the Pose block we want to replace
-    search_str = 'Pose {\n  translation -1.653 0.35 0.0001'
-    start_pos = content.find(search_str)
-    
-    if start_pos == -1:
-        print("Error: Could not find the base color section in the world file.")
-        return False
-    
-    # Find the opening brace of this Pose block
-    brace_pos = content.find('{', start_pos)
-    
-    # Find the matching closing brace
-    end_pos = find_matching_brace(content, brace_pos)
-    
-    if end_pos == -1:
-        print("Error: Could not find matching closing brace.")
-        return False
-    
-    # Generate new Pose children for the 8 bases
-    base_positions = [
-        '0 0 0.0001',
-        '0.12 0 0.0001',
-        '0.24 0 0.0001',
-        '0.36 0 0.0001',
-        '0.48 0 0.0001',
-        '0.6 0 0.0001',
-        '0.72 0 0.0001',
-        '0.84 0 0.0001'
-    ]
-    
-    new_poses = []
-    for i, color in enumerate(color_array[:8]):  # Limit to 8 bases
-        rgb = COLOR_MAP[color]
-        pose_text = f"""        Pose {{
-          translation {base_positions[i]}
-          children [
-            Shape {{
-              appearance PBRAppearance {{
-                baseColor {rgb}
-                roughness 1
-                metalness 0
-              }}
-              geometry Plane {{
-                size 0.12 0.5
-              }}
-            }}
-          ]
-        }}"""
-        new_poses.append(pose_text)
-    
-    new_children = '\n'.join(new_poses)
-    
-    # Build the complete replacement block
-    replacement = f"""Pose {{
-  translation -1.653 0.35 0.0001
-  children [
-    Group {{
-      children [
-{new_children}
-      ]
-    }}
-  ]
-}}"""
-    
-    # Replace the entire matched block
-    new_content = content[:start_pos] + replacement + content[end_pos+1:]
-    
-    # Write the updated content
-    with open(output_file, 'w') as f:
-        f.write(new_content)
-    
-    print(f"Successfully updated world file!")
-    print(f"Base colors set to: {color_array}")
-    return True
+    def create_backup(self):
+        """Create a .bak copy of the world file."""
+        backup_path = self.file_path + ".bak"
+        try:
+            shutil.copy2(self.file_path, backup_path)
+            return True
+        except Exception as e:
+            print(f"Failed to create backup: {e}")
+            return False
+
+    def update_colors(self, color_array):
+        """
+        Updates the Webots world file with new base colors.
+        Returns (Success: bool, Message: str)
+        """
+        if not self.create_backup():
+            return False, "Failed to create backup file. Aborting save."
+
+        try:
+            with open(self.file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except Exception as e:
+            return False, f"Error reading file: {e}"
+
+        # Robust search using regex to handle varying whitespace
+        # Target: Pose { translation -1.653 0.35 0.0001
+        pattern = re.compile(r'Pose\s*\{\s*translation\s+-1\.653\s+0\.35\s+0\.0001')
+        match = pattern.search(content)
+        
+        if not match:
+            return False, "Could not find the specific Base Pose block in the world file."
+        
+        start_pos = match.start()
+        
+        # Find the opening brace of this Pose block (it's inside the match, or right after)
+        brace_pos = content.find('{', start_pos)
+        
+        # Find the matching closing brace
+        end_pos = self.find_matching_brace(content, brace_pos)
+        
+        if end_pos == -1:
+            return False, "Could not find matching closing brace in file structure."
+        
+        # Generate new Pose children for the 8 bases
+        base_positions = [
+            '0 0 0.0001', '0.12 0 0.0001', '0.24 0 0.0001', '0.36 0 0.0001',
+            '0.48 0 0.0001', '0.6 0 0.0001', '0.72 0 0.0001', '0.84 0 0.0001'
+        ]
+        
+        new_poses = []
+        # Ensure we process exactly 8 bases, cycling or truncating if color_array is different
+        safe_colors = (color_array * 2)[:8] 
+        
+        for i, color in enumerate(safe_colors):
+            rgb = COLOR_MAP.get(color, '1 1 1') # Default to white if error
+            pose_text = (
+                f"        Pose {{\n"
+                f"          translation {base_positions[i]}\n"
+                f"          children [\n"
+                f"            Shape {{\n"
+                f"              appearance PBRAppearance {{\n"
+                f"                baseColor {rgb}\n"
+                f"                roughness 1\n"
+                f"                metalness 0\n"
+                f"              }}\n"
+                f"              geometry Plane {{\n"
+                f"                size 0.12 0.5\n"
+                f"              }}\n"
+                f"            }}\n"
+                f"          ]\n"
+                f"        }}"
+            )
+            new_poses.append(pose_text)
+        
+        new_children_str = '\n'.join(new_poses)
+        
+        # Build the replacement block
+        replacement = (
+            f"Pose {{\n"
+            f"  translation -1.653 0.35 0.0001\n"
+            f"  children [\n"
+            f"    Group {{\n"
+            f"      children [\n"
+            f"{new_children_str}\n"
+            f"      ]\n"
+            f"    }}\n"
+            f"  ]\n"
+            f"}}"
+        )
+        
+        new_content = content[:start_pos] + replacement + content[end_pos+1:]
+        
+        try:
+            with open(self.file_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            return True, "File saved successfully."
+        except Exception as e:
+            return False, f"Error writing file: {e}"
 
 
-class ColorEditorGUI:
+class ModernColorGUI:
     def __init__(self, wbt_file):
-        self.wbt_file = wbt_file
-        self.colors = ['r', 'g', 'b', 'y', 'r', 'g', 'b', 'y']  # Default colors
+        self.editor = WorldEditor(wbt_file)
+        self.colors = ['r', 'g', 'b', 'y'] * 2 # Initial 8 colors
         self.buttons = []
         
-        # Create main window
+        # UI Setup
         self.root = tk.Tk()
-        self.root.title("Base Color Editor")
-        self.root.geometry("600x250")
+        self.root.title("Webots Base Color Control")
+        self.root.geometry("900x450")
         self.root.resizable(False, False)
         
-        # Title label
-        title = tk.Label(self.root, text="Click each square to cycle colors", 
-                        font=("Arial", 14, "bold"))
-        title.pack(pady=10)
+        self.setup_styles()
+        self.build_ui()
         
-        # File label
-        file_label = tk.Label(self.root, text=f"Editing: {os.path.basename(wbt_file)}", 
-                             font=("Arial", 10))
-        file_label.pack(pady=5)
+    def setup_styles(self):
+        style = ttk.Style()
+        style.theme_use('clam')  # 'clam' usually allows for easier color customization
         
-        # Frame for color squares
-        colors_frame = tk.Frame(self.root)
-        colors_frame.pack(pady=10)
+        # Colors
+        self.bg_color = "#2c3e50"
+        self.panel_color = "#34495e"
+        self.text_color = "#ecf0f1"
+        self.accent_color = "#27ae60"
         
-        # Create 8 color buttons
+        self.root.configure(bg=self.bg_color)
+        
+        style.configure("TFrame", background=self.bg_color)
+        style.configure("Panel.TFrame", background=self.panel_color, relief="flat")
+        
+        style.configure("TLabel", background=self.bg_color, foreground=self.text_color, font=("Segoe UI", 10))
+        style.configure("Header.TLabel", font=("Segoe UI", 16, "bold"), padding=10)
+        style.configure("SubHeader.TLabel", font=("Segoe UI", 10, "italic"), foreground="#bdc3c7")
+        
+        style.configure("Action.TButton", font=("Segoe UI", 10, "bold"), padding=5)
+        
+    def build_ui(self):
+        # Header Section
+        header_frame = ttk.Frame(self.root)
+        header_frame.pack(fill="x", pady=(20, 10), padx=20)
+        
+        lbl_title = ttk.Label(header_frame, text="Base Color Controller", style="Header.TLabel")
+        lbl_title.pack(side="left")
+        
+        lbl_file = ttk.Label(header_frame, text=f"Target: {os.path.basename(self.editor.file_path)}", style="SubHeader.TLabel")
+        lbl_file.pack(side="right", anchor="se", pady=10)
+
+        # Main Control Area
+        main_panel = ttk.Frame(self.root, style="Panel.TFrame", padding=20)
+        main_panel.pack(fill="both", expand=True, padx=20, pady=10)
+        
+        # Color Grid
+        grid_frame = ttk.Frame(main_panel, style="Panel.TFrame")
+        grid_frame.pack(pady=20)
+        
         for i in range(8):
-            btn_frame = tk.Frame(colors_frame)
-            btn_frame.grid(row=0, column=i, padx=5)
+            f = ttk.Frame(grid_frame, style="Panel.TFrame")
+            f.grid(row=0, column=i, padx=8)
             
-            # Color square button
-            btn = tk.Button(btn_frame, width=8, height=4, 
-                           bg=COLOR_DISPLAY[self.colors[i]]['hex'],
-                           relief=tk.RAISED, bd=3,
-                           command=lambda idx=i: self.cycle_color(idx))
+            # Custom Button appearance using standard tk Button for better color control than ttk
+            btn = tk.Button(f, width=6, height=3, 
+                            relief="flat", borderwidth=0,
+                            cursor="hand2",
+                            font=("Segoe UI", 12, "bold"),
+                            command=lambda idx=i: self.cycle_color(idx))
             btn.pack()
             self.buttons.append(btn)
             
-            # Label below button
-            label = tk.Label(btn_frame, text=f"Base {i+1}", font=("Arial", 9))
-            label.pack()
+            lbl = ttk.Label(f, text=f"{i+1}", background=self.panel_color, font=("Segoe UI", 9, "bold"))
+            lbl.pack(pady=(5, 0))
+            
+            self.update_button_visual(i)
+
+        # Tools Section
+        tools_frame = ttk.Frame(main_panel, style="Panel.TFrame")
+        tools_frame.pack(fill="x", pady=20)
         
-        # Save button
-        save_btn = tk.Button(self.root, text="Save Changes", 
-                            font=("Arial", 12, "bold"),
-                            bg="#4CAF50", fg="white",
-                            width=20, height=2,
-                            command=self.save_changes)
-        save_btn.pack(pady=15)
+        # Left side tools (Batch actions)
+        ttk.Label(tools_frame, text="Batch Actions:", background=self.panel_color, font=("Segoe UI", 9, "bold")).pack(side="left", padx=(0, 10))
         
-        # Instructions
-        info_label = tk.Label(self.root, 
-                             text="Colors: Red → Green → Blue → Yellow → Red...",
-                             font=("Arial", 9), fg="gray")
-        info_label.pack()
-    
+        ttk.Button(tools_frame, text="Randomize", command=self.randomize_colors, style="Action.TButton").pack(side="left", padx=2)
+        ttk.Button(tools_frame, text="Reset", command=self.reset_colors, style="Action.TButton").pack(side="left", padx=2)
+        
+        # Right side tools (Save)
+        save_btn = tk.Button(tools_frame, text="SAVE CHANGES", 
+                             bg=self.accent_color, fg="white", 
+                             font=("Segoe UI", 10, "bold"),
+                             activebackground="#2ecc71", activeforeground="white",
+                             relief="flat", padx=20, pady=5,
+                             command=self.save)
+        save_btn.pack(side="right")
+
+        # Status Bar
+        self.status_var = tk.StringVar()
+        self.status_var.set("Ready")
+        status_bar = ttk.Label(self.root, textvariable=self.status_var, 
+                               font=("Segoe UI", 9), foreground="#bdc3c7",
+                               padding=(20, 5))
+        status_bar.pack(side="bottom", fill="x")
+
+    def update_button_visual(self, index):
+        code = self.colors[index]
+        props = COLOR_DISPLAY[code]
+        btn = self.buttons[index]
+        btn.config(bg=props['hex'], activebackground=props['hex'], fg=props['fg'], text=props['name'][0])
+
     def cycle_color(self, index):
-        """Cycle to the next color for the given base index."""
+        # Determine group range based on index (0-3 or 4-7)
+        if 0 <= index < 4:
+            start_idx, end_idx = 0, 4
+        elif 4 <= index < 8:
+            start_idx, end_idx = 4, 8
+        else:
+            return
+
         current_color = self.colors[index]
-        current_idx = COLORS.index(current_color)
-        next_idx = (current_idx + 1) % len(COLORS)
-        new_color = COLORS[next_idx]
+        next_idx_in_cycle = (COLORS.index(current_color) + 1) % len(COLORS)
+        target_color = COLORS[next_idx_in_cycle]
         
-        self.colors[index] = new_color
-        self.buttons[index].config(bg=COLOR_DISPLAY[new_color]['hex'])
-    
-    def save_changes(self):
-        """Save the color changes to the world file."""
-        success = update_world_file(self.wbt_file, self.wbt_file, self.colors)
+        # Find which index in the same group currently holds the target color to swap with
+        swap_idx = -1
+        for i in range(start_idx, end_idx):
+            if self.colors[i] == target_color:
+                swap_idx = i
+                break
+        
+        if swap_idx != -1:
+            # Swap colors
+            self.colors[index] = target_color
+            self.colors[swap_idx] = current_color
+            
+            self.update_button_visual(index)
+            self.update_button_visual(swap_idx)
+            
+            self.status_var.set(f"Swapped Base {index+1} with Base {swap_idx+1}")
+        else:
+            # Fallback (shouldn't happen if initialized correctly)
+            self.colors[index] = target_color
+            self.update_button_visual(index)
+
+    def randomize_colors(self):
+        # Shuffle first 4
+        group1 = COLORS.copy()
+        random.shuffle(group1)
+        # Shuffle second 4
+        group2 = COLORS.copy()
+        random.shuffle(group2)
+        
+        self.colors = group1 + group2
+        
+        for i in range(8):
+            self.update_button_visual(i)
+        self.status_var.set("Colors randomized (maintaining uniqueness per group)")
+
+    def reset_colors(self):
+        self.colors = ['r', 'g', 'b', 'y'] * 2
+        for i in range(8):
+            self.update_button_visual(i)
+        self.status_var.set("Colors reset to default sequence")
+
+    def save(self):
+        self.status_var.set("Saving...")
+        self.root.update_idletasks()
+        
+        success, msg = self.editor.update_colors(self.colors)
         
         if success:
-            color_names = [COLOR_DISPLAY[c]['name'] for c in self.colors]
-            message = "World file updated successfully!\n\n"
-            message += "\n".join([f"Base {i+1}: {color_names[i]}" 
-                                 for i in range(8)])
-            messagebox.showinfo("Success", message)
+            self.status_var.set(f"Success: {msg}")
+            messagebox.showinfo("Saved", f"{msg}\nBackup created successfully.")
         else:
-            messagebox.showerror("Error", "Failed to update world file.")
-    
+            self.status_var.set(f"Error: {msg}")
+            messagebox.showerror("Error", msg)
+
     def run(self):
-        """Start the GUI."""
         self.root.mainloop()
 
-
 if __name__ == "__main__":
-    # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(script_dir)
     
-    print(f"Looking for .wbt files in: {os.getcwd()}")
+    print("Webots Base Color Tool v2.0")
+    print("-" * 30)
     
-    # Automatically find .wbt file in current directory
     wbt_files = glob.glob("*.wbt")
     
     if not wbt_files:
-        print("\nError: No .wbt file found in the current directory.")
-        print(f"Current directory: {os.getcwd()}")
+        print("Error: No .wbt files found in current directory.")
         exit(1)
-    elif len(wbt_files) > 1:
-        print("Multiple .wbt files found. Please specify which one to use:")
-        for i, file in enumerate(wbt_files):
-            print(f"  {i+1}. {file}")
-        choice = int(input("Enter number: ")) - 1
-        input_file = wbt_files[choice]
-    else:
-        input_file = wbt_files[0]
+        
+    target_file = wbt_files[0]
+    if len(wbt_files) > 1:
+        print("Found multiple worlds:")
+        for i, f in enumerate(wbt_files):
+            print(f"[{i+1}] {f}")
+        try:
+            sel = int(input("Select file (number): ")) - 1
+            if 0 <= sel < len(wbt_files):
+                target_file = wbt_files[sel]
+        except ValueError:
+            pass # Default to first
+            
+    print(f"Loading: {target_file}")
     
-    print(f"Using world file: {input_file}")
-    
-    # Launch GUI
-    app = ColorEditorGUI(input_file)
+    app = ModernColorGUI(target_file)
     app.run()

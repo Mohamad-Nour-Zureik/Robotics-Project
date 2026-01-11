@@ -8,12 +8,6 @@ class ParentController(Robot):
         super(ParentController, self).__init__()
         self.timestep = int(self.getBasicTimeStep())
 
-        # Receiver Initialization ------------------------------
-        self.receiver = self.getDevice("receiver")
-        self.receiver.enable(self.timestep)
-        self.receiver.setChannel(1)
-        
-        
         # GPS Initialization -----------------------------------
         self.gps = self.getDevice("gps")  # Ensure the name matches the .wbt file
         if self.gps:
@@ -23,7 +17,6 @@ class ParentController(Robot):
                 "Error: GPS device not found. Add a GPS node to your robot in the scene tree."
             )
 
-        
         # Wheels -----------------------------------------------
         self.wheels = []
         # Mapping:
@@ -45,7 +38,7 @@ class ParentController(Robot):
         # Check if we found all wheels
         if len(self.wheels) != 4:
             print("Error: Could not find all wheels!")
-            
+
         # Arm ---------------------------------------------------
         self.arm_motors = []
         for i in range(1, 6):
@@ -57,7 +50,7 @@ class ParentController(Robot):
         for name in ["finger::left", "finger::right"]:
             gripper = self.getDevice(name)
             self.fingers.append(gripper)
-   
+
     def get_position(self):
         if self.gps:
             # Returns [x, y, z]
@@ -80,6 +73,15 @@ class ParentController(Robot):
         self.set_wheels(-speed, -speed, -speed, -speed)
 
     # Done
+    def move_left(self, speed):
+        # fl , fr , bl , br
+        self.set_wheels(-speed, speed, speed, -speed)
+
+    # Done
+    def move_right(self, speed):
+        self.set_wheels(speed, -speed, -speed, speed)
+
+    # Done
     def stop(self):
         self.set_wheels(0, 0, 0, 0)
 
@@ -99,9 +101,9 @@ class ParentController(Robot):
     def arm_stow(self):
         self.set_arm_pos([0, 0, 0, 0, 0])
         self.set_gripper(True)    
-        
-     # Done
-    
+
+    # Done
+
     def go_to_x(self, target_x):
         current_pos = self.get_position()
         current_x = current_pos[0]
@@ -123,5 +125,3 @@ class ParentController(Robot):
 
         self.stop()
         print(f"Arrived at X: {self.get_position()[0]:.2f}")
-              
-        
