@@ -291,7 +291,8 @@ class TakerController(Robot):
         # for _ in range(20):
         #     self.step(self.timestep)
 
-        self.set_arm_pos([-1.60, -1.134, -1.2, -0.82, 0],.8)
+   
+        self.set_arm_pos([-1.60, -1.134, -1.1, -0.82, 0],.8)
         for _ in range(100):
             self.step(self.timestep)
 
