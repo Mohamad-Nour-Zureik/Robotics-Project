@@ -128,15 +128,17 @@ class TakerController(ParentController):
         self.set_gripper(True)
 
         self.set_arm_pos([-1.60, 0, 0, 0, 0])
-        self.wait(50)
+        self.wait(20)
 
-        self.set_arm_pos([-1.60, -1.134, -1.2, -0.82, 0],.9)
-        self.wait(100)
+        self.set_arm_pos([-1.60, -1.134, -1.2, -0.82, 0])
+        self.wait(80)
 
         self.set_gripper(False)
-        self.wait(30)
+        self.wait(20)
 
-        self.set_arm_pos([-1.6, 0, 0, 0, 0],0.5)
+        self.set_arm_pos([-1.6, -.73, -0.05, -.93, 0])
+        #self.set_arm_pos([-1.6, 0, 0, 0, 0],0.5)
+
         # for _ in range(280):
         #     self.step(self.timestep)
 
@@ -169,8 +171,6 @@ class TakerController(ParentController):
 
     # Done
     def place_cube(self):
-        steps = 80
-        speed = 2.0
         print("Placing cube...")
         self.stop()
 
@@ -216,7 +216,7 @@ class TakerController(ParentController):
 
         colors = self.read_matrix_sequence()
 
-        self.go_to_x(PATH_START)
+        # self.go_to_x(PATH_START)
 
         if len(colors) < 8:
             print("Warning: Matrix read incomplete.")

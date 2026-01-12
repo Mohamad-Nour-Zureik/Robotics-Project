@@ -1,4 +1,5 @@
 from controller import Robot
+import math
 
 
 SPEED = 14.0
@@ -184,15 +185,20 @@ class ParentController(Robot):
 
             speed = SPEED * min(
                 1,
-                0.1 + (6 * abs(current_x - target_x)) ** 2,
-                0.1 + (6 * abs(current_x - init_x)) ** 2,
+                0.07 + (4.5 * abs(current_x - target_x)) ** 2,
+                0.07 + (4.5 * abs(current_x - init_x)) ** 2,
             )
+
+            #speed = SPEED * (math.cos(
+                #2 * math.pi * abs(current_x - init_x) / abs(target_x - init_x)
+                #- math.pi
+            #)/2.5 + 0.6)
 
             self.move_by_direction(dir, speed)
 
             # Check if we have reached or passed the target
             # We use a small threshold (0.01) to prevent jitter
-            if abs(current_x - target_x) <= 0.001:
+            if abs(current_x - target_x) <= 0.001 or dir != (target_x - current_x > 0.01):
                 break
 
         self.stop()

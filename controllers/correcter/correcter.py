@@ -34,14 +34,15 @@ class CorrecterController(ParentController):
 
         self.set_gripper(True)
 
-        self.set_arm_pos([-1.55,.7,.4,0.37,1.55],.7)
-        self.wait(200)
+        self.set_arm_pos([-1.55,.7,.4,0.37,1.55])
+        self.wait(150)
 
         self.set_gripper(False)
-        self.wait(40)
+        self.wait(20)
 
         # Got it, Thx
         self.send_message(self.EVENT_MESSAGE)
+        self.wait(20)
 
         #self.set_arm_pos([1.60, 0, 0, 0, 0])
         #self.wait(50)
@@ -78,11 +79,11 @@ class CorrecterController(ParentController):
         print("Placing cube...")
         self.stop()
 
-        self.set_arm_pos([1.55, -1.134, -0.95, -0.89, 0],.8)
-        self.wait(250)
+        self.set_arm_pos([-1.55, 1.134, 1, 0.95, 1.55],.9)
+        self.wait(120)
 
         self.set_gripper(True)
-        self.wait(20)
+        self.wait(10)
 
         # self.set_arm_pos([1.5, -1.134, -0.95, -0.89, 0],.8)
         # self.wait(140)
