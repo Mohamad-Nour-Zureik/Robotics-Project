@@ -34,8 +34,8 @@ class CorrecterController(ParentController):
 
         self.set_gripper(True)
 
-        self.set_arm_pos([-1.55,.7,.4,0.37,1.55],.5)
-        self.wait(300)
+        self.set_arm_pos([-1.55,.7,.4,0.37,1.55],.7)
+        self.wait(200)
 
         self.set_gripper(False)
         self.wait(40)

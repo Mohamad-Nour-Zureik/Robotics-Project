@@ -203,7 +203,7 @@ class TakerController(ParentController):
         self.handle_event_message()
 
         self.set_gripper(True)
-        self.wait(30)
+        self.wait(10)
 
         self.arm_stow()
         print("Cube placed on its base.")
