@@ -1,7 +1,7 @@
 from controller import Robot
 
 
-SPEED = 2.0
+SPEED = 14.0
 
 class ParentController(Robot):
     def __init__(self):
@@ -158,24 +158,37 @@ class ParentController(Robot):
     def wait(self, rng):
         for _ in range(rng):
             self.step(self.timestep)
+
+    def move_by_direction(self, dir, speed = SPEED):
+        if dir:
+            self.move_forward(speed)
+        else:
+            self.move_backward(speed)
+        
         
 
     def go_to_x(self, target_x):
         current_pos = self.get_position()
         current_x = current_pos[0]
+        init_x = current_x
 
         if abs(target_x - current_x) <= 0.01:
             return
 
         # Determine direction
-        if target_x - current_x > 0.01:
-            self.move_forward(SPEED)
-        else:
-            self.move_backward(SPEED)
+        dir = target_x - current_x > 0.01
 
         # Loop until the robot reaches the target coordinate
         while self.step(self.timestep) != -1:
             current_x = self.get_position()[0]
+
+            speed = SPEED * min(
+                1,
+                0.1 + (6 * abs(current_x - target_x)) ** 2,
+                0.1 + (6 * abs(current_x - init_x)) ** 2,
+            )
+
+            self.move_by_direction(dir, speed)
 
             # Check if we have reached or passed the target
             # We use a small threshold (0.01) to prevent jitter
