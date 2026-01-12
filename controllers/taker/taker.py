@@ -225,7 +225,7 @@ class TakerController(ParentController):
 
         colors = self.read_matrix_sequence()
 
-        self.go_to_x(PATH_START)
+        # self.go_to_x(PATH_START)
 
         if len(colors) < 8:
             print("Warning: Matrix read incomplete.")

@@ -55,9 +55,9 @@ class CorrecterController(ParentController):
         for _ in range(30):
             self.step(self.timestep)
 
-        self.set_arm_pos([1.6, 0, 0, 0, 0],0.5)
-        for _ in range(280):
-            self.step(self.timestep)
+        self.set_arm_pos([1.6, 0, 0, 0, 0],1.1)
+        # for _ in range(280):
+        #     self.step(self.timestep)
 
         # self.set_arm_pos([0.0, 0.6, 1.0, 1.5, 0])
         # for _ in range(280):
@@ -92,7 +92,7 @@ class CorrecterController(ParentController):
         # for _ in range(20):
         #     self.step(self.timestep)
 
-        self.set_arm_pos([1.5, -1.134, -0.9, -0.82, 0],.8)
+        self.set_arm_pos([1.5, -1.134, -0.9, -0.85, 0],.8)
         for _ in range(100):
             self.step(self.timestep)
 
