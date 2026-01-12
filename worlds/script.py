@@ -109,7 +109,7 @@ class WorldEditor:
                 f"                metalness 0\n"
                 f"              }}\n"
                 f"              geometry Plane {{\n"
-                f"                size 0.12 0.5\n"
+                f"                size 0.05 0.1\n"
                 f"              }}\n"
                 f"            }}\n"
                 f"          ]\n"
