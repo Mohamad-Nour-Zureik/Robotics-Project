@@ -41,8 +41,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.3463451606978448 0.3603546335933515 0.8661348438372546 1.6746790715551423
-  position -0.034998361176619114 -5.1987112352484175 4.747783528591172
+  orientation 0.20240911330104278 0.09593892229780683 -0.9745903108696603 2.2760989185166762
+  position 4.293509103168938 5.257623355278286 2.799714709904255
 }
 TexturedBackground {
 }
@@ -127,6 +127,9 @@ Youbot {
   name "correcter"
   controller "correcter"
   bodySlot [
+    Emitter {
+      channel 1
+    }
     GPS {
     }
     Receiver {
@@ -140,6 +143,66 @@ Pose {
     Group {
       children [
         Pose {
+          translation -0.05 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 0 1
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.07 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.19 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.31 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
           translation 0.48 0 0.0001
           children [
             Shape {
@@ -159,7 +222,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 0 0
+                baseColor 1 1 0
                 roughness 1
                 metalness 0
               }
@@ -174,7 +237,7 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 1 1 0
+                baseColor 0 1 0
                 roughness 1
                 metalness 0
               }
@@ -189,117 +252,12 @@ Pose {
           children [
             Shape {
               appearance PBRAppearance {
-                baseColor 0 0 1
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.12 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0 1 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.05 0.1
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.24 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
                 baseColor 1 0 0
                 roughness 1
                 metalness 0
               }
               geometry Plane {
                 size 0.05 0.1
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.36 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 1 1 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.48 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0 0 1
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.6 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 1 1 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.72 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0 1 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.84 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 1 0 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
               }
             }
           ]
@@ -383,6 +341,9 @@ Youbot {
   name "taker"
   controller "taker"
   bodySlot [
+    Receiver {
+      channel 1
+    }
     Emitter {
       channel 1
     }
