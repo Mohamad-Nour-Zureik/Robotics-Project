@@ -1,7 +1,14 @@
+import sys
+import os
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
 from controller import Robot
-import math
+import collections
 
-
+current_dir = os.path.dirname(__file__)
+controllers_dir = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.append(controllers_dir)
 SPEED = 14.0
 
 class ParentController(Robot):
@@ -12,37 +19,35 @@ class ParentController(Robot):
         self.INFO_MESSAGE = "INFO"
 
         self.timestep = int(self.getBasicTimeStep())
+        # --- FIX: Use 'robot_name' to avoid conflict with built-in 'name' property ---
+        self.robot_name = self.getName()
+        # --- ROS 2 INITIALIZATION ---
+        if not rclpy.ok():
+            rclpy.init(args=None)
 
-        # Receiver Initialization ------------------------------
-        self.receiver = self.getDevice("receiver")
-        self.receiver.enable(self.timestep)
-        self.receiver.setChannel(1)
+        # Create a unique node name based on the robot name (sanitized)
+        sanitized_name = "".join(x for x in self.robot_name if x.isalnum() or x == "_")
+        self.node = rclpy.create_node(sanitized_name)
 
-        # Emitter Initialization (Sender) ---
-        self.emitter = self.getDevice("emitter")
-        # Ensure we are broadcasting on a specific channel (e.g., 1)
-        # The Correcter must have a Receiver set to the same channel.
-        if self.emitter:
-            self.emitter.setChannel(1)
+        # Create Publisher and Subscriber on a shared topic
+        self.pub = self.node.create_publisher(String, "/robot_comm", 10)
+        self.sub = self.node.create_subscription(
+            String, "/robot_comm", self._ros_callback, 10
+        )
 
-        # GPS Initialization -----------------------------------
-        self.gps = self.getDevice("gps")  # Ensure the name matches the .wbt file
+        # Message Queue to replicate Receiver behavior
+        self.msg_queue = collections.deque()
+
+        # GPS Initialization
+        self.gps = self.getDevice("gps")
         if self.gps:
             self.gps.enable(self.timestep)
         else:
-            print(
-                "Error: GPS device not found. Add a GPS node to your robot in the scene tree."
-            )
+            print("Error: GPS device not found.")
 
-        # Wheels -----------------------------------------------
+        # Wheels Initialization
         self.wheels = []
-        # Mapping:
-        # fl (Front Left)  -> wheel2
-        # fr (Front Right) -> wheel1
-        # bl (Back Left)   -> wheel4
-        # br (Back Right)  -> wheel3
         wheel_names = ["wheel2", "wheel1", "wheel4", "wheel3"]
-
         for name in wheel_names:
             wheel = self.getDevice(name)
             if wheel:
@@ -52,63 +57,70 @@ class ParentController(Robot):
             else:
                 print(f"Error: Wheel {name} not found")
 
-        # Check if we found all wheels
-        if len(self.wheels) != 4:
-            print("Error: Could not find all wheels!")
-
-        # Arm ---------------------------------------------------
+        # Arm & Gripper Initialization
         self.arm_motors = []
         for i in range(1, 6):
-            motor = self.getDevice("arm" + str(i))
-            self.arm_motors.append(motor)
+            self.arm_motors.append(self.getDevice("arm" + str(i)))
 
-        # Gripper ------------------------------------------------
         self.fingers = []
         for name in ["finger::left", "finger::right"]:
-            gripper = self.getDevice(name)
-            self.fingers.append(gripper)
+            self.fingers.append(self.getDevice(name))
+
+    # --- ROS 2 CALLBACK & HELPERS ---
+    def _ros_callback(self, msg):
+        # Parse format: "SENDER_NAME|CONTENT"
+        try:
+            sender, content = msg.data.split("|", 1)
+            if sender != self.robot_name:  # Ignore own messages
+                self.msg_queue.append(content)
+        except ValueError:
+            pass  # Malformed message
+
+    def step_and_spin(self):
+        # Advance simulation AND process ROS callbacks
+        ret = self.step(self.timestep)
+        if ret != -1:
+            rclpy.spin_once(self.node, timeout_sec=0)
+        return ret
+
+    def send_message(self, message):
+        print(f"From {self.robot_name}, Sending message {message}")
+        # Payload includes sender name for filtering
+        payload = f"{self.robot_name}|{message}"
+        self.pub.publish(String(data=payload))
+
+    def handle_event_message(self):
+        print(f"{self.robot_name} is waiting for EVENT...")
+        while self.step_and_spin() != -1:
+            if self.msg_queue:
+                # Peek/Pop logic matching original
+                message = self.msg_queue[0]  # Peek
+                if message.startswith(self.EVENT_MESSAGE):
+                    self.msg_queue.popleft()  # Consume
+                    return True
+                # If message is not EVNT, maybe wait or consume?
+                # Original logic implied strict ordering or filtering.
+                # We will leave it in queue if it's not what we want (simplistic)
+                # OR simplistic assumption: only relevant msgs arrive.
+                # Let's assume we consume it if it's the wrong type to prevent deadlock,
+                # but print warning.
+                if not message.startswith(self.EVENT_MESSAGE):
+                    # Just skip unrelated messages?
+                    self.msg_queue.popleft()
+
+    def handle_info_message(self):
+        print(f"{self.robot_name} is waiting for INFO...")
+        while self.step_and_spin() != -1:
+            if self.msg_queue:
+                message = self.msg_queue.popleft()
+                if message.startswith(self.INFO_MESSAGE):
+                    return message[len(self.INFO_MESSAGE) + 1 :]
 
     def get_position(self):
         if self.gps:
             # Returns [x, y, z]
             return self.gps.getValues()
         return [0, 0, 0]
-
-    def handle_event_message(self):
-
-        print(f"{self.name} is waiting...")
-
-        while self.step(self.timestep) != -1:
-            if self.receiver.getQueueLength() > 0:
-
-                message = self.receiver.getString() # .decode("utf-8")
-                self.receiver.nextPacket() 
-
-                assert(
-                    message.startswith(self.EVENT_MESSAGE)
-                )
-
-                return True
-
-    def handle_info_message(self):
-
-        print(f"{self.name} is waiting...")
-        
-        while self.step(self.timestep) != -1:
-            if self.receiver.getQueueLength() > 0:
-
-                message = self.receiver.getString()
-                self.receiver.nextPacket() 
-
-                assert(message.startswith(self.INFO_MESSAGE))
-
-                return message[len(self.INFO_MESSAGE)+1:]
-    
-    def send_message(self,message):
-        print(f"From {self.name}, Sending message {message}")
-
-        if self.emitter:
-            self.emitter.send(message.encode("utf-8"))
 
     # Done
     def set_wheels(self, v_fl, v_fr, v_bl, v_br):
@@ -165,8 +177,6 @@ class ParentController(Robot):
             self.move_forward(speed)
         else:
             self.move_backward(speed)
-        
-        
 
     def go_to_x(self, target_x):
         current_pos = self.get_position()
@@ -189,15 +199,8 @@ class ParentController(Robot):
                 0.07 + (4.5 * abs(current_x - init_x)) ** 2,
             )
 
-            #speed = SPEED * (math.cos(
-                #2 * math.pi * abs(current_x - init_x) / abs(target_x - init_x)
-                #- math.pi
-            #)/2.5 + 0.6)
-
             self.move_by_direction(dir, speed)
 
-            # Check if we have reached or passed the target
-            # We use a small threshold (0.01) to prevent jitter
             if abs(current_x - target_x) <= 0.001 or dir != (target_x - current_x > 0.01):
                 break
 

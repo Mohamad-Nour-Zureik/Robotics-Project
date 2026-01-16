@@ -41,8 +41,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.3463451606978448 0.3603546335933515 0.8661348438372546 1.6746790715551423
-  position -0.034998361176619114 -5.1987112352484175 4.747783528591172
+  orientation 0.2180057046775796 -0.005970379920908851 -0.9759292327272671 3.1950212340216155
+  position 4.593580113691873 -0.007949859301079987 2.0522727203724402
 }
 TexturedBackground {
 }
@@ -122,11 +122,14 @@ Pose {
   ]
 }
 Youbot {
-  translation 2.14978 -0.44 0.101938
-  rotation -0.01893315743599298 0.9799101196699082 0.19853889522713164 0.0021532096868765688
+  translation 2.1497799999675 -0.440000000261429 0.10193771736405773
+  rotation -0.01893226212781156 0.9799101317217478 0.19853892112074825 0.0021532093757633134
   name "correcter"
-  controller "correcter"
+  controller "<extern>"
   bodySlot [
+    Emitter {
+      channel 1
+    }
     GPS {
     }
     Receiver {
@@ -140,52 +143,7 @@ Pose {
     Group {
       children [
         Pose {
-          translation 0 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0 1 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.12 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 1 1 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.24 0 0.0001
-          children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 1 0 0
-                roughness 1
-                metalness 0
-              }
-              geometry Plane {
-                size 0.12 0.5
-              }
-            }
-          ]
-        }
-        Pose {
-          translation 0.36 0 0.0001
+          translation -0.05 0 0.0001
           children [
             Shape {
               appearance PBRAppearance {
@@ -194,7 +152,52 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.12 0.5
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.07 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.19 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 0 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0.31 0 0.0001
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 1 1 0
+                roughness 1
+                metalness 0
+              }
+              geometry Plane {
+                size 0.05 0.1
               }
             }
           ]
@@ -209,7 +212,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.12 0.5
+                size 0.05 0.1
               }
             }
           ]
@@ -224,7 +227,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.12 0.5
+                size 0.05 0.1
               }
             }
           ]
@@ -239,7 +242,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.12 0.5
+                size 0.05 0.1
               }
             }
           ]
@@ -254,7 +257,7 @@ Pose {
                 metalness 0
               }
               geometry Plane {
-                size 0.12 0.5
+                size 0.05 0.1
               }
             }
           ]
@@ -333,11 +336,14 @@ Pose {
   ]
 }
 Youbot {
-  translation -2.15 0.38066 0.101938
-  rotation -0.009684072804544142 0.45770592587256387 0.8890509007672482 0.004609661056327183
+  translation -2.149999999415609 0.3806599996615444 0.10193771736405761
+  rotation -0.009683486394709343 0.4577068874660861 0.8890504121012209 0.0046096635831198475
   name "taker"
-  controller "taker"
+  controller "<extern>"
   bodySlot [
+    Receiver {
+      channel 1
+    }
     Emitter {
       channel 1
     }
@@ -354,26 +360,26 @@ Pose {
   translation 0 0.01 0
   children [
     KukaBox {
-      translation 0.25 0.111 0.012491722812477677
-      rotation -0.4641969490792695 0.30946463271949615 0.8299113407836317 8.163692727631753e-17
+      translation 0.25 0.111 0.012491722812499998
+      rotation 0.26543527590571575 0.08847842530190035 -0.9600602494432069 1.4276780825218612e-16
       name "Yellow Box"
       color 1 1 0
     }
     KukaBox {
-      translation 2.4648691148619644e-17 0.111 0.012491722812499998
-      rotation -0.552038781973807 -0.8280581729614446 0.09784091878467821 4.576443275514871e-17
+      translation 2.463025301174704e-17 0.111 0.012491722812500002
+      rotation 0.5437342725164038 0.3020745958424463 0.7830095653551621 2.090852893923228e-16
       name "Blue Box"
       color 0 0 1
     }
     KukaBox {
-      translation -0.25 0.111 0.012491722812477677
-      rotation 0.030283053174386516 -0.030283053174390867 -0.9990825158018101 8.342534542481322e-16
+      translation -0.25 0.111 0.012491722812499998
+      rotation 0.26543527590571575 0.08847842530190035 -0.9600602494432069 1.4276780825218612e-16
       name "Green Box"
       color 0 1 0
     }
     KukaBox {
-      translation -0.5 0.111 0.012491722812477677
-      rotation -0.026935663538757187 -0.10774265415502027 -0.9938138610954059 9.37929064920375e-16
+      translation -0.5 0.111 0.012491722812499998
+      rotation 0.8005098084097219 -0.24015294252292044 0.5490998186463127 1.577978274001619e-16
       name "Red Box"
       color 1 0 0
     }
